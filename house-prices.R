@@ -32,15 +32,8 @@ for (mo in grep('^[A-Z].', ls(), value = TRUE)) {
 mon.df <- mget(month.abb[1:6])
 sapply(mon.df, function(x) colnames(x) <- var.names)
 
-colnames(Jan) <- var.names
-colnames(Feb) <- var.names
-colnames(Mar) <- var.names
-colnames(Apr) <- var.names
-colnames(May) <- var.names
-colnames(Jun) <- var.names
-
 library(plyr)
-prices <-  rbind.fill(month.abb[1:6])
+prices <-  rbind.fill(mon.df)
 prices <-  rbind.fill(Jan, Feb, Mar, Apr, May, Jun)
 
 #prices$date  <- strptime(prices$date, "%d/%m/%Y %H:%M")
@@ -49,8 +42,11 @@ prices$date  <- dmy_hm(prices$date)
 
 
 #------------------------------
-prices[grep("E2 0RF", prices$postcode), ]
+prices[grep("^E2 0.", prices$postcode), ]
 prices[grep("OLD FORD ROAD", prices$street), ]
 prices[grep("MACE STREET", prices$street), ]
 
 summary(prices$date)
+
+prices[prices$price > 10000000, ]
+
