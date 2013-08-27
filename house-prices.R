@@ -23,20 +23,14 @@ get.prices <- function(m, u) {
 #Fetch the data, available months
 mapply(get.prices, month.abb[1:6], mon.url)
 
-
-for (mo in grep('^[A-Z].', ls(), value = TRUE)) {
-  colnames(mo) <- var.names
-}
-
-
 mon.df <- mget(month.abb[1:6])
 sapply(mon.df, function(x) colnames(x) <- var.names)
 
 library(plyr)
 prices <-  rbind.fill(mon.df)
-prices <-  rbind.fill(Jan, Feb, Mar, Apr, May, Jun)
+# prices <-  rbind.fill(Jan, Feb, Mar, Apr, May, Jun)
 
-#prices$date  <- strptime(prices$date, "%d/%m/%Y %H:%M")
+# prices$date  <- strptime(prices$date, "%d/%m/%Y %H:%M")
 library(lubridate)
 prices$date  <- dmy_hm(prices$date)
 
@@ -50,3 +44,5 @@ summary(prices$date)
 
 prices[prices$price > 10000000, ]
 
+library(ggplot2)
+ggplot(aes(price), data = prices) + geom_histogram() + coord_trans(x = "log10")
