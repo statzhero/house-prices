@@ -52,4 +52,4 @@ prices[prices$price > 10000000, ]
 
 # install.packages("ggplot2")
 library(ggplot2)
-ggplot(aes(price), data = prices) + geom_histogram() + coord_trans(x = "log10")
+ggplot(aes(prices), data = prices) + geom_histogram() + coord_trans(x = "log10")
