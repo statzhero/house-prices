@@ -5,6 +5,20 @@
 # years are in separate links
 #-----------------------------------------
 
+# Install dependencies
+install.packages("plyr")
+install.packages("lubridate")
+install.packages("ggplot2")
+
+# Load libraries
+library(plyr)
+library(lubridate)
+library(ggplot2)
+
+#------------------------------
+# Get and combine the data
+#------------------------------
+
 
 mon.url  <- c(
 "http://www.landregistry.gov.uk/__data/assets/file/0003/34806/PPMS_Jan_2013_ew_with-columns.csv",
@@ -21,6 +35,11 @@ get.prices <- function(m, u) {
    dt <- read.csv(u, header = FALSE, stringsAsFactors = FALSE)
    assign(paste0(m), dt, envir = .GlobalEnv)
  }
+
+#------------------------------
+# Basic cleansing of the data
+#------------------------------
+
 #Fetch the data, available months
 mapply(get.prices, month.abb[1:6], mon.url)
 
@@ -28,18 +47,18 @@ mapply(get.prices, month.abb[1:6], mon.url)
 mon.df <- mget(month.abb[1:6])
 sapply(mon.df, function(x) colnames(x) <- var.names)
 
-# install.packages("plyr")
-library(plyr)
 prices <-  rbind.fill(mon.df)
 # prices <-  rbind.fill(Jan, Feb, Mar, Apr, May, Jun)
 
 # prices$date  <- strptime(prices$date, "%d/%m/%Y %H:%M")
-# install.packages("lubridate")
-library(lubridate)
+
 prices$date  <- dmy_hm(prices$date)
 
-
 #------------------------------
+# Using the data to do some fun stuff
+#------------------------------
+
+
 # Search for your street
 prices[grep("^E2 0.", prices$postcode), ]
 prices[grep("OLD FORD ROAD", prices$street), ]
@@ -53,3 +72,4 @@ prices[prices$price > 10000000, ]
 # install.packages("ggplot2")
 library(ggplot2)
 ggplot(aes(prices), data = prices) + geom_histogram() + coord_trans(x = "log10")
+
