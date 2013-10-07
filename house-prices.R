@@ -60,9 +60,8 @@ prices$date  <- dmy_hm(prices$date)
 
 
 # Search for your street
-prices[grep("^E2 0.", prices$postcode), ]
-prices[grep("OLD FORD ROAD", prices$street), ]
-prices[grep("MACE STREET", prices$street), ]
+prices[grep("^EC2A .", prices$postcode), ]
+prices[grep("CLIFTON STREET", prices$street), ]
 
 summary(prices$date)
 
